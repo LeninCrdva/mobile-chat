@@ -1,16 +1,38 @@
-# simple_chat
+<h1> MOBILE CHAT </h1>
 
-A simple chat implements WebSocketsXStomps
+<p>
+  <em>Simplified <code>README</code> file</em>
+</p>
+
+This project is a chat application.
+Its main features are:
+- User authentication
+- User can chat with other users
+
+## Technologies
+- Flutter (Dart)
+- Spring Boot (Java - Back-end)
+- Cloudinary (Image storage)
+- ObjectBox (Local Database)
+
+## To Do
+- [ ] Add user registration
+- [ ] Add user profile update
+- [ ] Add user can send images
+- [ ] Add user can send videos
+- [ ] Add user receive notifications
 
 ## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+You can run this project in your local machine by following the steps below.
+1. Clone the repository
+    ```bash
+   git clone "https://github.com/LeninCrdva/mobile-chat.git"
+    ```
+2. Install the dependencies
+   ```bash
+   flutter pub get
+   ```
+3. Run the project
+    ```bash
+   flutter run
+   ```

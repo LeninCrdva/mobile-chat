@@ -1,0 +1,186 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:784246622544431292",
+      "lastPropertyId": "5:7588028880936374263",
+      "name": "Chat",
+      "properties": [
+        {
+          "id": "1:7349096665710263844",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "4:7814312279097011037",
+          "name": "lastMessage",
+          "type": 9
+        },
+        {
+          "id": "5:7588028880936374263",
+          "name": "infoId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "2:7966445149648339808",
+          "relationTarget": "ChatInfo"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:304425749333024579",
+      "lastPropertyId": "3:7991771280308769205",
+      "name": "Token",
+      "properties": [
+        {
+          "id": "1:4630125122897521560",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:4411605320126066052",
+          "name": "accessToken",
+          "type": 9
+        },
+        {
+          "id": "3:7991771280308769205",
+          "name": "refreshToken",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:376550903010958873",
+      "lastPropertyId": "3:581160019448596681",
+      "name": "User",
+      "properties": [
+        {
+          "id": "1:7747518244042403085",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3973664558496155739",
+          "name": "username",
+          "type": 9
+        },
+        {
+          "id": "3:581160019448596681",
+          "name": "imageUrl",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:4588652592590523392",
+      "lastPropertyId": "4:6724570860107424304",
+      "name": "ChatInfo",
+      "properties": [
+        {
+          "id": "1:8044139851474752200",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:430878397596184066",
+          "name": "sender",
+          "type": 9
+        },
+        {
+          "id": "3:564891112464107856",
+          "name": "receiver",
+          "type": 9
+        },
+        {
+          "id": "4:6724570860107424304",
+          "name": "receiverAvatar",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "5:4916786417188433464",
+      "lastPropertyId": "10:3830776520096902627",
+      "name": "Message",
+      "properties": [
+        {
+          "id": "1:8157620515229986322",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:2020491500273739034",
+          "name": "content",
+          "type": 9
+        },
+        {
+          "id": "3:5482905689475526902",
+          "name": "type",
+          "type": 9
+        },
+        {
+          "id": "4:5652366373037772317",
+          "name": "senderUsername",
+          "type": 9
+        },
+        {
+          "id": "5:9198969498966259121",
+          "name": "receiver",
+          "type": 9
+        },
+        {
+          "id": "6:624229868091970332",
+          "name": "seenAt",
+          "type": 12
+        },
+        {
+          "id": "7:2844039200529605121",
+          "name": "sendAt",
+          "type": 12
+        },
+        {
+          "id": "8:1250507922245368023",
+          "name": "receivedAt",
+          "type": 12
+        },
+        {
+          "id": "10:3830776520096902627",
+          "name": "chatId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "4:2403779873860159016",
+          "relationTarget": "Chat"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "5:4916786417188433464",
+  "lastIndexId": "4:2403779873860159016",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [
+    4664804561112100780,
+    90355671778055508
+  ],
+  "retiredPropertyUids": [
+    1403896824443474724,
+    4723852935797135281,
+    6208529792835083273
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}

@@ -31,8 +31,18 @@ ThemeData lightTheme = ThemeData(
 
 ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
-  primaryColor: Colors.blue,
+  primaryColor: AppColors.darkPrimaryColor,
   scaffoldBackgroundColor: AppColors.scaffoldBackgroundColor,
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ButtonStyle(
+      shape: MaterialStateProperty.all(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      backgroundColor: MaterialStateProperty.all(AppColors.darkPrimaryButtonColor),
+    ),
+  ),
   appBarTheme: const AppBarTheme(
     backgroundColor: Colors.black,
     elevation: 0,

@@ -13,18 +13,19 @@ class Chat {
   @Backlink('chat')
   final messages = ToMany<Message>();
 
-  String? lastMessage;
-
   Chat({
     required this.id,
-    this.lastMessage,
   });
 
   factory Chat.fromJson(Map<String, dynamic> json) {
     final chat = Chat(
       id: json['id'],
-      lastMessage: json['lastMessage'],
     );
+
+    if (json['lastMessage'] != null) {
+      final lastMessage = Message.fromJson(json['lastMessage']);
+      chat.messages.add(lastMessage);
+    }
 
     if (json['chatInfo'] != null) {
       final chatInfo = ChatInfo.fromJson(json['chatInfo']);

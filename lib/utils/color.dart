@@ -12,4 +12,12 @@ class AppColors {
   static const Color floatingActionButtonColor = Color.fromRGBO(40, 75, 165, 1);
 
   static const Color scaffoldBackgroundColor = Color.fromRGBO(14,14,14,1);
+
+  // Dark mode colors
+
+  static const Color darkPrimaryColor = Color.fromRGBO(44, 76, 164, 1);
+
+  static const Color darkLoginBgColor = Color.fromRGBO(33, 37, 74, 1);
+
+  static const Color darkPrimaryButtonColor = Color.fromRGBO(125, 122, 188, 1);
 }

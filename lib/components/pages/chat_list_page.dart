@@ -20,11 +20,14 @@ class _ChatPageState extends State<ChatListPage> {
       itemCount: provider.chats.length,
       physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) {
+        final chat = provider.chats[index];
+        final lastMessage = chat.messages.isNotEmpty ? chat.messages.last : null;
+
         return cardChat(
-          provider.chats[index].info.target!.receiverAvatar,
-          provider.chats[index].info.target!.receiver,
-          provider.chats[index].lastMessage ?? 'No messages',
-          provider.chats[index].id,
+          chat.info.target!.receiverAvatar,
+          chat.info.target!.receiver,
+          lastMessage?.content ?? 'No messages',
+          chat.id,
         );
       },
     );

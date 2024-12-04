@@ -1,6 +1,6 @@
-<h1> MOBILE CHAT </h1>
+<h1 align="center"> MOBILE CHAT </h1>
 
-<p>
+<p align="center">
   <em>Simplified <code>README</code> file</em>
 </p>
 

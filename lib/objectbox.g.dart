@@ -35,11 +35,6 @@ final _entities = <obx_int.ModelEntity>[
             type: 6,
             flags: 129),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(4, 7814312279097011037),
-            name: 'lastMessage',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
             id: const obx_int.IdUid(5, 7588028880936374263),
             name: 'infoId',
             type: 11,
@@ -231,7 +226,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
       retiredPropertyUids: const [
         1403896824443474724,
         4723852935797135281,
-        6208529792835083273
+        6208529792835083273,
+        7814312279097011037
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -252,12 +248,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
           object.id = id;
         },
         objectToFB: (Chat object, fb.Builder fbb) {
-          final lastMessageOffset = object.lastMessage == null
-              ? null
-              : fbb.writeString(object.lastMessage!);
           fbb.startTable(6);
           fbb.addInt64(0, object.id);
-          fbb.addOffset(3, lastMessageOffset);
           fbb.addInt64(4, object.info.targetId);
           fbb.finish(fbb.endTable());
           return object.id;
@@ -267,10 +259,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final rootOffset = buffer.derefObject(0);
           final idParam =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
-          final lastMessageParam =
-              const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 10);
-          final object = Chat(id: idParam, lastMessage: lastMessageParam);
+          final object = Chat(id: idParam);
           object.info.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.info.attach(store);
@@ -472,13 +461,9 @@ class Chat_ {
   /// See [Chat.id].
   static final id = obx.QueryIntegerProperty<Chat>(_entities[0].properties[0]);
 
-  /// See [Chat.lastMessage].
-  static final lastMessage =
-      obx.QueryStringProperty<Chat>(_entities[0].properties[1]);
-
   /// See [Chat.info].
   static final info =
-      obx.QueryRelationToOne<Chat, ChatInfo>(_entities[0].properties[2]);
+      obx.QueryRelationToOne<Chat, ChatInfo>(_entities[0].properties[1]);
 
   /// see [Chat.messages]
   static final messages = obx.QueryBacklinkToMany<Message, Chat>(Message_.chat);

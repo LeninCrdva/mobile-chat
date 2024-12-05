@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:simple_chat/components/shared/profile_picture_dialog.dart';
 import 'package:simple_chat/route/named_routes.dart';
 import 'package:simple_chat/src/service/chat_service.dart';
+import 'package:simple_chat/utils/date.dart';
 
 class ChatListPage extends StatefulWidget {
   const ChatListPage({super.key});
@@ -28,85 +29,74 @@ class _ChatPageState extends State<ChatListPage> {
           chat.info.target!.receiver,
           lastMessage?.content ?? 'No messages',
           chat.id,
+          lastMessage?.sendAt ?? DateTime.now(),
         );
       },
     );
   }
 
-  Widget cardChat(String imageUrl, String title, String subtitle, int chatId) {
-    Future<void> handleTap() async {
-      await Future.delayed(const Duration(milliseconds: 100));
-      if (context.mounted) {
+  Widget cardChat(String imageUrl, String title, String subtitle, int chatId, DateTime date) {
+
+    handleTap() {
         Navigator.pushNamed(
           context,
           NamedRoute.chat,
           arguments: [imageUrl, title, chatId],
         );
-      }
     }
-    return Material(
-      child: InkWell(
-        onTap: handleTap,
-        splashColor: Colors.blue.withOpacity(0.1),
-        highlightColor: Colors.blue.withOpacity(0.05),
+
+    return ListTile(
+      leading: GestureDetector(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) =>
+                ProfilePictureDialog(
+                  avatarUrl: imageUrl,
+                  contactName: title,
+                ),
+          );
+        },
         child: Container(
-          decoration: const BoxDecoration(
-            color: Colors.transparent,
-          ),
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) =>
-                        ProfilePictureDialog(
-                          avatarUrl: imageUrl,
-                          contactName: title,
-                        ),
-                  );
-                },
-                child: Container(
-                  margin: const EdgeInsets.all(7),
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      image: NetworkImage(imageUrl),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        subtitle,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+          margin: const EdgeInsets.all(1),
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              image: NetworkImage(imageUrl),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: const TextStyle(
+          fontSize: 14,
+          color: Colors.grey,
+        ),
+      ),
+      trailing: SizedBox(
+        width: 60,
+        child: Text(
+          date.isAfter(DateTime.now().subtract(const Duration(days: 1)))
+              ? DateUtilsConverter(date).onlyHour
+              : DateUtilsConverter(date).onlyDate,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      onTap: handleTap,
     );
   }
 }

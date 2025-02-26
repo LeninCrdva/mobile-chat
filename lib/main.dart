@@ -2,16 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:simple_chat/components/shared/connection_state.dart';
 import 'package:simple_chat/route/named_routes.dart';
 import 'package:simple_chat/src/service/auth_service.dart';
-import 'package:simple_chat/src/service/chat_service.dart';
-import 'package:simple_chat/src/service/config_service.dart';
-import 'package:simple_chat/src/service/message_service.dart';
+import 'package:simple_chat/src/service/profile_service.dart';
 import 'package:simple_chat/src/service/toast_service.dart';
 import 'package:simple_chat/src/storage/store.dart';
 import 'package:simple_chat/src/storage/token.dart';
-import 'package:simple_chat/src/websocket/websocket_provider.dart';
-import 'package:simple_chat/utils/theme_color.dart';
+import 'package:simple_chat/utils/theme/theme_color.dart';
 
 late ObjectBox objectBox;
 late Token? tokenFromBox;
@@ -34,10 +32,12 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => WebSocketProvider()),
         ChangeNotifierProvider(create: (_) => AuthServiceProvider()),
-        ChangeNotifierProvider(create: (_) => ChatService()),
-        ChangeNotifierProvider(create: (_) => MessageService(0)),
+        ChangeNotifierProvider(create: (_) {
+          ProfileService profileSvc = ProfileService();
+          profileSvc.loadProfile();
+          return profileSvc;
+        }),
       ],
       child: MaterialApp(
         scaffoldMessengerKey: ToastService().scaffoldKey,
@@ -50,6 +50,14 @@ void main() async {
         darkTheme: darkTheme,
         themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
+        builder: (context, child) {
+          return Stack(
+            children: [
+              child!,
+              const WConnectionState(),
+            ],
+          );
+        },
       ),
     ),
   );

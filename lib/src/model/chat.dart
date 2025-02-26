@@ -24,6 +24,17 @@ class Chat {
 
     if (json['lastMessage'] != null) {
       final lastMessage = Message.fromJson(json['lastMessage']);
+
+      if (json['chatInfo'] != null) {
+        if (json['senderUsername'] != null) {
+          lastMessage.senderUsername = json['senderUsername'];
+        }
+
+        if (json['receiver'] != null) {
+          lastMessage.receiver = json['receiver'];
+        }
+      }
+
       chat.messages.add(lastMessage);
     }
 

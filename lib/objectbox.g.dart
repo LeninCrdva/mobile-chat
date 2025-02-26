@@ -81,7 +81,7 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(1, 7747518244042403085),
             name: 'id',
             type: 6,
-            flags: 1),
+            flags: 129),
         obx_int.ModelProperty(
             id: const obx_int.IdUid(2, 3973664558496155739),
             name: 'username',
@@ -219,7 +219,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
       entities: _entities,
       lastEntityId: const obx_int.IdUid(5, 4916786417188433464),
       lastIndexId: const obx_int.IdUid(4, 2403779873860159016),
-      lastRelationId: const obx_int.IdUid(0, 0),
+      lastRelationId: const obx_int.IdUid(1, 7282974588187484302),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [4664804561112100780, 90355671778055508],
@@ -229,7 +229,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         6208529792835083273,
         7814312279097011037
       ],
-      retiredRelationUids: const [],
+      retiredRelationUids: const [7282974588187484302],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
       version: 1);
@@ -384,8 +384,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
         objectToFB: (Message object, fb.Builder fbb) {
           final contentOffset = fbb.writeString(object.content);
           final typeOffset = fbb.writeString(object.type);
-          final senderUsernameOffset = fbb.writeString(object.senderUsername);
-          final receiverOffset = fbb.writeString(object.receiver);
+          final senderUsernameOffset = object.senderUsername == null
+              ? null
+              : fbb.writeString(object.senderUsername!);
+          final receiverOffset = object.receiver == null
+              ? null
+              : fbb.writeString(object.receiver!);
           fbb.startTable(11);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, contentOffset);
@@ -422,9 +426,9 @@ obx_int.ModelDefinition getObjectBoxModel() {
               .vTableGet(buffer, rootOffset, 8, '');
           final senderUsernameParam =
               const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 10, '');
+                  .vTableGetNullable(buffer, rootOffset, 10);
           final receiverParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 12, '');
+              .vTableGetNullable(buffer, rootOffset, 12);
           final sendAtParam = DateTime.fromMicrosecondsSinceEpoch(
               (const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0) /
                       1000)

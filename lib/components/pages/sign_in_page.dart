@@ -43,13 +43,6 @@ class _SignInPageState extends State<SignInPage> {
           ),
         ),
       ),
-      /*body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(
-          vertical: deviceHeight * 0.13,
-          horizontal: deviceWidth * 0.1,
-        ),
-        child: _customForm(deviceWidth, deviceHeight),
-      ),*/
     );
   }
 

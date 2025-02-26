@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 class AppColors {
+  AppColors._();
+
   static const Color scaffoldTitleLightColor = Color.fromRGBO(40,70,165,1);
 
   static const Color scaffoldTitleDarkColor = Color.fromRGBO(255,255,255,1);

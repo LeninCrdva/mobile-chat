@@ -58,7 +58,7 @@
           "id": "1:7747518244042403085",
           "name": "id",
           "type": 6,
-          "flags": 1
+          "flags": 129
         },
         {
           "id": "2:3973664558496155739",
@@ -162,7 +162,7 @@
   ],
   "lastEntityId": "5:4916786417188433464",
   "lastIndexId": "4:2403779873860159016",
-  "lastRelationId": "0:0",
+  "lastRelationId": "1:7282974588187484302",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
@@ -177,6 +177,8 @@
     6208529792835083273,
     7814312279097011037
   ],
-  "retiredRelationUids": [],
+  "retiredRelationUids": [
+    7282974588187484302
+  ],
   "version": 1
 }

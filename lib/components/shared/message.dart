@@ -82,7 +82,7 @@ class _MessageComponentState extends State<MessageComponent> {
 
   BoxDecoration _buildBoxDecoration() {
     return BoxDecoration(
-      color: widget.isSender ? Colors.grey[300] : Colors.blue[300],
+      color: widget.isSender ? Colors.cyanAccent[200] : Colors.blue[300],
       borderRadius: _buildBorderRadius(),
     );
   }

@@ -7,7 +7,6 @@ class ObjectBox {
   late final Admin? admin;
 
   ObjectBox._create(this.store) {
-    // Add any additional setup code, e.g. build queries.
     if (Admin.isAvailable()) {
       admin = Admin(store);
     }

@@ -1,31 +1,29 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:simple_chat/components/shared/message.dart';
+import 'package:simple_chat/main.dart';
 import 'package:simple_chat/src/model/message.dart';
 import 'package:simple_chat/src/model/message_request.dart';
 import 'package:simple_chat/src/service/message_service.dart';
-import 'package:simple_chat/src/service/toast_service.dart';
 import 'package:simple_chat/src/utils/token_claim.dart';
-import 'package:simple_chat/src/websocket/websocket_provider.dart';
 import 'package:simple_chat/utils/content_type.dart';
 
-class ChatPage extends StatefulWidget {
+class MessageListPage extends StatefulWidget {
   final String avatarUrl;
   final String contactName;
   final int chatId;
 
-  const ChatPage(
+  const MessageListPage(
       {super.key,
       required this.avatarUrl,
       required this.contactName,
       required this.chatId});
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<MessageListPage> createState() => _MessageListPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _MessageListPageState extends State<MessageListPage> {
+  MessageService msgService = MessageService(objectBox.store.box<Message>());
   final _textController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final TokenClaims claims = TokenClaims();
@@ -34,20 +32,16 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<MessageService>(context, listen: false)
-          .loadChat(widget.chatId);
-      context.read<WebSocketProvider>().initialize(); // Inicializa el WebSocket
-      context.read<WebSocketProvider>().connect(); // Conecta el WebSocket
+      msgService.loadMessages(widget.chatId);
       _scrollToBottom();
     });
   }
 
   @override
   void dispose() {
+    super.dispose();
     _textController.dispose();
     _scrollController.dispose();
-    context.read<WebSocketProvider>().disconnect();
-    super.dispose();
   }
 
   @override
@@ -71,45 +65,47 @@ class _ChatPageState extends State<ChatPage> {
         ),
         title: Text(widget.contactName),
       ),
-      body: Consumer<WebSocketProvider>(
-        builder: (context, provider, child) {
+      body: StreamBuilder<List<Message>>(
+        stream: msgService.getDataByIdOrNotAsStream(widget.chatId),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          final chats = snapshot.data!;
+
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            _scrollToBottom();
+          });
+
           return Column(
             children: [
               Expanded(
-                child: Consumer<MessageService>(
-                  builder: (context, provider, child) {
-                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                      _scrollToBottom();
-                    });
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: chats.length,
+                  itemBuilder: (context, index) {
+                    final message = chats[index];
+                    final nextMessage =
+                        index < chats.length - 1 ? chats[index + 1] : null;
+                    final prevMessage = index > 0 ? chats[index - 1] : null;
 
-                    return ListView.builder(
-                      controller: _scrollController,
-                      itemCount: provider.messages.length,
-                      itemBuilder: (context, index) {
-                        final message = provider.messages[index];
-                        final nextMessage = index < provider.messages.length - 1
-                            ? provider.messages[index + 1]
-                            : null;
-                        final prevMessage =
-                            index > 0 ? provider.messages[index - 1] : null;
+                    final isConsecutive =
+                        prevMessage?.senderUsername == message.senderUsername;
+                    final isLastConsecutive =
+                        nextMessage?.senderUsername != message.senderUsername;
 
-                        final isConsecutive = prevMessage?.senderUsername ==
-                            message.senderUsername;
-                        final isLastConsecutive = nextMessage?.senderUsername !=
-                            message.senderUsername;
-
-                        return MessageComponent(
-                          message: message.content,
-                          sender: message.senderUsername,
-                          receiver: message.receiver,
-                          dateReceived: message.sendAt,
-                          isSender:
-                              message.senderUsername != widget.contactName,
-                          receiverAvatar: widget.avatarUrl,
-                          isConsecutive: isConsecutive,
-                          isLastConsecutive: isLastConsecutive,
-                        );
-                      },
+                    return MessageComponent(
+                      message: message.content,
+                      sender: message.senderUsername!,
+                      receiver: message.receiver!,
+                      dateReceived: message.sendAt,
+                      isSender: message.senderUsername != widget.contactName,
+                      receiverAvatar: widget.avatarUrl,
+                      isConsecutive: isConsecutive,
+                      isLastConsecutive: isLastConsecutive,
                     );
                   },
                 ),
@@ -131,14 +127,17 @@ class _ChatPageState extends State<ChatPage> {
                     IconButton(
                       icon: const Icon(Icons.send),
                       onPressed: () async {
-                        provider.sendMessage(
-                          MessageRequest(
-                            _textController.text,
-                            await claims.extractStringClaim("sub"),
-                            widget.chatId,
-                            ContentTypeMessage.text.name,
-                          ),
+                        if (_textController.text.isEmpty) return;
+
+                        final msg = MessageRequest(
+                          _textController.text,
+                          await claims.extractStringClaim("sub"),
+                          widget.chatId,
+                          ContentTypeMessage.text.name,
                         );
+
+                        msgService.sendMessage(msg);
+
                         _textController.clear();
                         _scrollToBottom();
                       },

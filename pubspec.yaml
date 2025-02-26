@@ -49,6 +49,8 @@ dependencies:
   custom_navigation_bar: ^0.8.2
   flutter_dotenv: ^5.2.1
   intl: ^0.18.1
+  internet_connectivity_checker: ^1.0.2
+  sse_stream: ^1.0.2
 
 dev_dependencies:
   flutter_test:

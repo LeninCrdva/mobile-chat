@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
 import 'package:simple_chat/main.dart';
 import 'package:simple_chat/src/model/auth_request.dart';
+import 'package:simple_chat/src/service/config_service.dart';
 import 'package:simple_chat/src/storage/token.dart';
 
 class AuthServiceProvider with ChangeNotifier {
   final Box<Token> _tokenBox = objectBox.store.box<Token>();
+  final baseUrl = ConfigService.apiUrl;
 
   late final Dio _dio;
   bool _isLoggedIn = false;
@@ -18,7 +20,7 @@ class AuthServiceProvider with ChangeNotifier {
   }
 
   Future<void> login(AuthRequest authRequest) async {
-    const String url = 'http://192.168.1.176:8080/api/v1/auth/sign-in';
+    String url = '${baseUrl}auth/sign-in';
 
     final response = await _dio.post(
       url,
@@ -29,6 +31,7 @@ class AuthServiceProvider with ChangeNotifier {
       _isLoggedIn = true;
 
       final token = Token.fromJson(response.data);
+      token.id = 1;
       _tokenBox.put(token);
       tokenFromBox = token;
 

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:simple_chat/components/shared/profile_picture_dialog.dart';
+import 'package:simple_chat/main.dart';
 import 'package:simple_chat/route/named_routes.dart';
+import 'package:simple_chat/src/model/chat.dart';
 import 'package:simple_chat/src/service/chat_service.dart';
 import 'package:simple_chat/utils/date.dart';
 
@@ -13,61 +14,82 @@ class ChatListPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatListPage> {
+  ChatService chatService = ChatService(objectBox.store.box<Chat>());
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      chatService.loadChats();
+      chatService.createLocalChat();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ChatService>(context);
+    return StreamBuilder(
+      stream: chatService.getDataByIdOrNotAsStream(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
 
-    return ListView.builder(
-      itemCount: provider.chats.length,
-      physics: const BouncingScrollPhysics(),
-      itemBuilder: (context, index) {
-        final chat = provider.chats[index];
-        final lastMessage = chat.messages.isNotEmpty ? chat.messages.last : null;
+        final chats = snapshot.data!;
 
-        return cardChat(
-          chat.info.target!.receiverAvatar,
-          chat.info.target!.receiver,
-          lastMessage?.content ?? 'No messages',
-          chat.id,
-          lastMessage?.sendAt ?? DateTime.now(),
+        return ListView.builder(
+          shrinkWrap: true,
+          itemCount: chats.length,
+          physics: const BouncingScrollPhysics(),
+          itemBuilder: (context, index) {
+            final chat = chats[index];
+
+            final lastMessage =
+                chat.messages.isNotEmpty ? chat.messages.last : null;
+
+            return cardChat(
+              chat.info.target!.receiverAvatar,
+              chat.info.target!.receiver,
+              lastMessage?.content ?? 'No messages',
+              chat.id,
+              lastMessage?.sendAt ?? DateTime.now(),
+              lastMessage?.seenAt,
+            );
+          },
         );
       },
     );
   }
 
-  Widget cardChat(String imageUrl, String title, String subtitle, int chatId, DateTime date) {
-
+  Widget cardChat(String imageUrl, String title, String subtitle, int chatId,
+      DateTime date, DateTime? seenAt) {
     handleTap() {
-        Navigator.pushNamed(
-          context,
-          NamedRoute.chat,
-          arguments: [imageUrl, title, chatId],
-        );
+      Navigator.pushNamed(
+        context,
+        NamedRoute.chat,
+        arguments: [imageUrl, title, chatId],
+      );
     }
+
+    final bool isSeen = seenAt != null;
 
     return ListTile(
       leading: GestureDetector(
         onTap: () {
           showDialog(
             context: context,
-            builder: (context) =>
-                ProfilePictureDialog(
-                  avatarUrl: imageUrl,
-                  contactName: title,
-                ),
+            builder: (context) => ProfilePictureDialog(
+              avatarUrl: imageUrl,
+              contactName: title,
+            ),
           );
         },
-        child: Container(
-          margin: const EdgeInsets.all(1),
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(
-              image: NetworkImage(imageUrl),
-              fit: BoxFit.cover,
-            ),
-          ),
+        child: CircleAvatar(
+          radius: 30,
+          backgroundColor: Colors.transparent,
+          backgroundImage: const AssetImage('assets/icon/person-avatar.png'),
+          foregroundImage: NetworkImage(imageUrl),
         ),
       ),
       title: Text(
@@ -79,9 +101,10 @@ class _ChatPageState extends State<ChatListPage> {
       ),
       subtitle: Text(
         subtitle,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 14,
           color: Colors.grey,
+          fontWeight: isSeen ? FontWeight.normal : FontWeight.bold,
         ),
       ),
       trailing: SizedBox(
@@ -91,8 +114,8 @@ class _ChatPageState extends State<ChatListPage> {
               ? DateUtilsConverter(date).onlyHour
               : DateUtilsConverter(date).onlyDate,
           style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
+            fontSize: 11,
+            fontWeight: FontWeight.w900,
           ),
         ),
       ),

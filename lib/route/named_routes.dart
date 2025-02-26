@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simple_chat/components/pages/home_page.dart';
 import 'package:simple_chat/components/pages/sign_in_page.dart';
-import 'package:simple_chat/components/shared/chat.dart';
+import 'package:simple_chat/components/shared/message_list_page.dart';
 
 class NamedRoute {
   static const String login = '/login';
@@ -21,7 +21,7 @@ class NamedRoute {
     notFound: (context) => NotFoundPage(),*/
     chat: (context) {
       final args = ModalRoute.of(context)!.settings.arguments as List;
-      return ChatPage(
+      return MessageListPage(
         avatarUrl: args[0] as String,
         contactName: args[1] as String,
         chatId: args[2] as int,

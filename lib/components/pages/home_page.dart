@@ -1,9 +1,9 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_chat/components/pages/chat_list_page.dart';
-import 'package:simple_chat/components/pages/notifications_page.dart';
 import 'package:simple_chat/components/pages/settings_page.dart';
-import 'profile.dart';
+import 'package:simple_chat/main.dart';
+import 'package:simple_chat/route/named_routes.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,10 +16,18 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final List<Widget> _screens = [
     const ChatListPage(),
-    const NotificationPage(),
-    const ProfilePage(),
     const SettingsPage(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +40,8 @@ class _HomePageState extends State<HomePage> {
       body: _screens[_currentIndex],
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/create-chat');
+            // This change with a Dialog to create a new chat
+            navigatorKey.currentState!.pushNamed(NamedRoute.home);
         },
         child: const Icon(Icons.add),
       ),
@@ -53,14 +62,8 @@ class _HomePageState extends State<HomePage> {
         CustomNavigationBarItem(
           icon: const Icon(Icons.chat),
           title: const Text('Chat'),
-        ),
-        CustomNavigationBarItem(
-          icon: const Icon(Icons.notifications),
-          title: const Text('Notifications'),
-        ),
-        CustomNavigationBarItem(
-          icon: const Icon(Icons.person),
-          title: const Text('Profile'),
+          badgeCount: 20,
+          showBadge: true
         ),
         CustomNavigationBarItem(
           icon: const Icon(Icons.settings),

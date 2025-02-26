@@ -7,8 +7,8 @@ class Message {
   int id;
   String content;
   String type;
-  String senderUsername;
-  String receiver;
+  String? senderUsername;
+  String? receiver;
   @Property(type: PropertyType.dateNano)
   DateTime? seenAt;
   @Property(type: PropertyType.dateNano)
@@ -22,8 +22,8 @@ class Message {
     required this.id,
     required this.content,
     required this.type,
-    required this.senderUsername,
-    required this.receiver,
+    this.senderUsername,
+    this.receiver,
     required this.sendAt,
     this.seenAt,
     this.receivedAt,
@@ -39,15 +39,28 @@ class Message {
   };
 
   factory Message.fromJson(Map<String, dynamic> json) {
-    return Message(
+    final message = Message(
       id: json['id'],
       content: json['content'],
       type: json['type'],
-      senderUsername: json['senderUsername'],
-      receiver: json['receiver'],
       sendAt: DateTime.parse(json['sendAt']),
       seenAt: json['seenAt'] != null ? DateTime.parse(json['seenAt']) : null,
       receivedAt: json['receivedAt'] != null ? DateTime.parse(json['receivedAt']) : null,
     );
+
+    if (json['senderUsername'] != null) {
+      message.senderUsername = json['senderUsername'];
+    }
+
+    if (json['receiver'] != null) {
+      message.receiver = json['receiver'];
+    }
+
+    if (json['chatId'] != null) {
+      final chat = json['chatId'];
+      message.chat.targetId = chat;
+    }
+
+    return message;
   }
 }
